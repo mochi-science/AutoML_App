@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "automl-gui"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+streamlit = "^1.38.0"
+matplotlib = "^3.9.2"
+numpy = ">=1.23.5,<2.1"
+pandas = "^2.2.3"
+seaborn = "^0.13.2"
+japanize-matplotlib = "^1.1.3"
+altair = "^5.4.1"
+optuna = "^4.0.0"
+scikit-learn = "^1.5.2"
+lightgbm = "^4.5.0"
+xgboost = "^2.1.1"
+scipy = "^1.14.1"
+llvmlite = "^0.43.0"
+numba = "^0.60.0"
+shap = "^0.46.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
