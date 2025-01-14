@@ -37,21 +37,22 @@ def delete_outlier(df_train, columns=None):
     Returns:
         pd.DataFrame: 外れ値が削除されたデータフレーム
     """
+    df = df_train.copy()
     # 外れ値を検出するカラムが指定されていない場合、数値型のカラムすべてで検出を行う
     if columns is None:
-        columns = df_train.select_dtypes(include=[np.number]).columns
+        columns = df.select_dtypes(include=[np.number]).columns
     
     for column in columns:
-        Q1 = df_train[column].quantile(0.25)
-        Q3 = df_train[column].quantile(0.75)
+        Q1 = df[column].quantile(0.25)
+        Q3 = df[column].quantile(0.75)
         IQR = Q3 - Q1
         lower_bound = Q1 - 1.5 * IQR
         upper_bound = Q3 + 1.5 * IQR
         
-        # 四分位範囲外のデータを除去
-        df_train = df_train[(df_train[column] >= lower_bound) & (df_train[column] <= upper_bound)]
+        # 四分位範囲外のデータを保持
+        df = df[(df[column] >= lower_bound) & (df[column] <= upper_bound)]
         
-    return df_train
+    return df
 
 
 def detect_nan(df_train, columns=None):
@@ -81,13 +82,14 @@ def delete_nan(df_train, columns=None):
     Returns:
         pd.DataFrame: 欠損値を削除したデータフレーム。
     """
+    df = df_train.copy()
     # columnsが指定されていない場合、データフレーム全体から欠損値を削除
     if columns is None:
-        df_train = df_train.dropna()
+        df = df.dropna()
     else:
         # 指定されたカラムから欠損値を削除
-        df_train = df_train.dropna(subset=columns)
-    return df_train
+        df = df.dropna(subset=columns)
+    return df
 
 def detect_non_gauss(df_train):
     """正規分布でないカラムを検出する
@@ -119,13 +121,14 @@ def transform_log(df_train, columns=None):
     Returns:
         pd.DataFrame: 変換済みのデータ
     """
+    df = df_train.copy()
     # columnsが指定されていない場合、データフレーム全体に対して対数変換を実行
     if columns is None:
-        df_train = np.log(df_train + 1)  # 0値を考慮して+1
+        df = np.log(df + 1)  # 0値を考慮して+1
     else:
         # 指定されたカラムのみ対数変換を実行
-        df_train[columns] = np.log(df_train[columns] + 1)
-    return df_train
+        df[columns] = np.log(df[columns] + 1)
+    return df
 
 def transform_std(df_train, columns=None):
     """標準化を行う
@@ -137,13 +140,14 @@ def transform_std(df_train, columns=None):
     Returns:
         pd.DataFrame: 標準化済みのデータ
     """
+    df = df_train.copy()
     # columnsが指定されていない場合、データフレーム全体に対して標準化を実行
     if columns is None:
-        df_train = (df_train - df_train.mean()) / df_train.std()
+        df = (df - df.mean()) / df.std()
     else:
         # 指定されたカラムのみ標準化を実行
-        df_train[columns] = (df_train[columns] - df_train[columns].mean()) / df_train[columns].std()
-    return df_train
+        df[columns] = (df[columns] - df[columns].mean()) / df[columns].std()
+    return df
 
 def classify_dtypes(df_train):
     """データフレームのデータ型を分類する
@@ -171,9 +175,10 @@ def transform_label(data, cols, label_encoder):
     Returns:
         pd.DataFrame: ラベルエンコーダーを適用したデータ
     """
+    df = data.copy()
     for col in cols:
-        data[col] = label_encoder.fit_transform(data[col])
-    return data
+        df[col] = label_encoder.fit_transform(df[col])
+    return df
 
 def transform_onehot(data, cols, onehot_encoder):
     """ワンホットエンコーダーを適用する
@@ -186,9 +191,10 @@ def transform_onehot(data, cols, onehot_encoder):
     Returns:
         pd.DataFrame: ワンホットエンコーダーを適用したデータ
     """
+    df = data.copy()
     for col in cols:
-        data[col] = onehot_encoder.fit_transform(data[col])
-    return data
+        df[col] = onehot_encoder.fit_transform(df[col])
+    return df
 
 def transform_to_gray(df_train, columns=None):
     """グレースケール変換を行う
@@ -200,7 +206,7 @@ def transform_to_gray(df_train, columns=None):
     Returns:
         pd.DataFrame: 変換済みのデータ
     """
-    pass
+    return df_train.copy()
 
 #TODO
 
